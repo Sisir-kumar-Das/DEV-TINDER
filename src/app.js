@@ -2,20 +2,13 @@ const express = require("express");
 
 const app = express();
 
+const { adminAuth } = require("./middlewares/auth");
+
 app.use(express.json());
 
 // app.use(express.urlencoded({ extended: true }));
 
-app.use("/user", (req, res, next) => {
-  const id = req.body.id;
-  if (id !== "1000") {
-    res.status(401).send("You are not authorized");
-  } else {
-    next();
-  }
-});
-
-app.get("/user", (req, res) => {
+app.get("/user", adminAuth, (req, res) => {
   res.json({ Name: "Sisir", Role: "Associate" });
 });
 
