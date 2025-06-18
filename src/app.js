@@ -2,21 +2,14 @@ const express = require("express");
 
 const app = express();
 
-// app.use(express.json());
+const { adminAuth } = require("./middlewares/auth");
+
+app.use(express.json());
 
 // app.use(express.urlencoded({ extended: true }));
 
-app.get("/user", (req, res) => {
-  const id = req.body.id;
-  if (id === "1000") {
-    res.json({ Name: "Sisir", Role: "Associate" });
-  } else {
-    res.send("Not found");
-  }
-});
-
-app.use("/", (req, res) => {
-  res.send("Hello from the dahboard server.....");
+app.get("/user", adminAuth, (req, res) => {
+  res.json({ Name: "Sisir", Role: "Associate" });
 });
 
 app.listen(3000, () => {
