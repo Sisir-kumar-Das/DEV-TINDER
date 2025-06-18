@@ -2,21 +2,21 @@ const express = require("express");
 
 const app = express();
 
-// app.use(express.json());
+app.use(express.json());
 
 // app.use(express.urlencoded({ extended: true }));
 
-app.get("/user", (req, res) => {
+app.use("/user", (req, res, next) => {
   const id = req.body.id;
-  if (id === "1000") {
-    res.json({ Name: "Sisir", Role: "Associate" });
+  if (id !== "1000") {
+    res.status(401).send("You are not authorized");
   } else {
-    res.send("Not found");
+    next();
   }
 });
 
-app.use("/", (req, res) => {
-  res.send("Hello from the dahboard server.....");
+app.get("/user", (req, res) => {
+  res.json({ Name: "Sisir", Role: "Associate" });
 });
 
 app.listen(3000, () => {
