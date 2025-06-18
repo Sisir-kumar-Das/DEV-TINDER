@@ -2,8 +2,11 @@ const express = require("express");
 
 const app = express();
 
+// app.use(express.json());
+
+// app.use(express.urlencoded({ extended: true }));
+
 app.get("/user", (req, res) => {
-  console.log(req.body);
   const id = req.body.id;
   if (id === "1000") {
     res.json({ Name: "Sisir", Role: "Associate" });
