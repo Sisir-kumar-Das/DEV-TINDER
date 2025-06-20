@@ -4,24 +4,69 @@ const app = express();
 const { adminAuth } = require("./middlewares/auth");
 const User = require("./models/user");
 
-//app.use(express.json());
+app.use(express.json());
 
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
+//Sign up User and save the data in DB
 app.post("/signup", async (req, res) => {
   //Creating a new instance of the user Model
-  const userData = {
-    firstName: "Sisir",
-    lastName: "Kumar Das",
-    emailId: "sisirkumardas1502@gmail.com",
-    password: "papi@1234",
-    age: 25,
-    gender: "Male",
-  };
+  const user = new User(req.body);
+  try {
+    await user.save();
+    res.send("User Added Sucessfully.");
+  } catch (err) {
+    res.status(500).send("Error Saving the user" + err.message);
+  }
+});
 
-  const user = new User(userData);
-  await user.save();
-  res.send("User Added Sucessfully.");
+// Fetch the user details from DB by EmailId
+app.get("/user", async (req, res) => {
+  const userEmailId = req.query.emailId;
+
+  try {
+    const user = await User.find({ emailId: userEmailId });
+    if (user.length) {
+      res.send(user);
+    } else {
+      res.send("User not found.");
+    }
+  } catch (err) {
+    res.status(400).send("Something went wrong.");
+  }
+});
+
+//fetch all the users
+app.get("/feed", async (req, res) => {
+  try {
+    const user = await User.find({});
+    res.send(user);
+  } catch (err) {
+    res.status(400).send("Something went wrong.");
+  }
+});
+
+//delete user by id
+app.delete("/user", async (req, res) => {
+  const userId = req.body.userId;
+  try {
+    const del = await User.findByIdAndDelete(userId);
+    res.send("User deleted sucessfully.");
+  } catch (err) {
+    res.send("Something went wrong");
+  }
+});
+
+//update data of the user
+app.patch("/user", async (req, res) => {
+  const userId = req.body.userId;
+  const data = req.body;
+  try {
+    await User.findByIdAndUpdate({ _id: userId }, data);
+    res.send("User updated sucessfully.");
+  } catch (err) {
+    res.send("Something went wrong");
+  }
 });
 
 connectDB()
