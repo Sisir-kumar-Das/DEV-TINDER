@@ -6,9 +6,10 @@ const User = require("./models/user");
 const { validateSignUpData } = require("./utils/validation");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
+const cookieParser = require("cookie-parser");
 
 app.use(express.json());
-
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 //Sign up User and save the data in DB
@@ -47,6 +48,7 @@ app.post("/login", async (req, res) => {
     }
     const isPaswordValid = await bcrypt.compare(password, user.password);
     if (isPaswordValid) {
+      res.cookie("token", "djsibjdbgjidsbgibgiudsbfvjdanfjkn");
       res.send("Login Sucessful!");
     } else {
       throw new Error("Email ID or password does not exist!");
@@ -54,6 +56,13 @@ app.post("/login", async (req, res) => {
   } catch (err) {
     res.status(500).send("Error: " + err.message);
   }
+});
+
+//profile of the user
+app.get("/profile", async (req, res) => {
+  const cookie = req.cookies;
+  console.log(cookie);
+  res.send("Reading cookie");
 });
 
 // Fetch the user details from DB by EmailId
