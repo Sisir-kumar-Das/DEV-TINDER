@@ -48,12 +48,10 @@ app.post("/login", async (req, res) => {
     if (!user) {
       throw new Error("Email id is not exist, please sign up.");
     }
-    const isPaswordValid = await bcrypt.compare(password, user.password);
+    const isPaswordValid = await user.validatePassword(password);
     if (isPaswordValid) {
-      //create jwt token
-      const token = await jwt.sign({ _id: user._id }, "DEV@Tinder$790", {
-        expiresIn: "7d",
-      });
+      const token = await user.getJWT();
+
       res.cookie("token", token, {
         expires: new Date(Date.now() + 8 * 3600000),
       });
