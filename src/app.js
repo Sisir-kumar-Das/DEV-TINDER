@@ -2,17 +2,18 @@ const express = require("express");
 const { connectDB } = require("./config/database");
 const app = express();
 const { adminAuth } = require("./middlewares/auth");
-const validator = require("validator");
 const cookieParser = require("cookie-parser");
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
-//Sign up User and save the data in DB
+const authRouter = require("./routes/auth");
+const profileRouter = require("./routes/profile");
+const requestRouter = require("./routes/requests");
 
-//login user
-
-//profile of the user
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestRouter);
 
 connectDB()
   .then(() => {
