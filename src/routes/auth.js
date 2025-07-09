@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const User = require("./models/user");
+const User = require("../models/user");
+const validator = require("validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { validateSignUpData } = require("../utils/validation");
-const { userAuth } = require("./middlewares/auth");
+const { userAuth } = require("../middlewares/auth");
 
 router.post("/signup", async (req, res) => {
   try {
