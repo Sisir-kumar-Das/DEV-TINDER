@@ -49,6 +49,7 @@ requestRouter.post(
           { fromUserId: toUserId, toUserId: fromUserId },
         ],
       });
+      // The above one is compond indexing.
 
       if (existingConnetctionREquest) {
         return res
@@ -63,7 +64,7 @@ requestRouter.post(
       });
 
       const data = await connectionRequest.save();
-      res.json({ message: "Connection request sent succesfully.", data });
+      res.json({ message: status + " req sent sucessfully", data });
     } catch (err) {
       res.status(400).send("ERROR: " + err.message);
     }
