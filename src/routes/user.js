@@ -41,9 +41,32 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
         { fromUserId: loggedInUser._id, status: "intrested" },
         { toUserId: loggedInUser._id, status: "intrested" },
       ],
+    })
+      .populate("fromUserId", [
+        "firstName",
+        "lastName",
+        "photoUrl",
+        "age",
+        "about",
+        "skills",
+      ])
+      .populate("toUserId", [
+        "firstName",
+        "lastName",
+        "photoUrl",
+        "age",
+        "about",
+        "skills",
+      ]);
+
+    const data = connectionRequests.map((row) => {
+      if (row.fromUserId.id.toString() === loggedInUser._id.toString()) {
+        return row.toUserId;
+      }
+      return row.fromUserId;
     });
 
-    res.status(200).json({ data: connectionRequests });
+    res.status(200).json({ data });
   } catch (err) {
     res.status(400).send("Error: " + err.message);
   }
