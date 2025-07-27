@@ -72,4 +72,32 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
   }
 });
 
+userRouter.get("/feed", userAuth, async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+
+    const connectionsRequests = await ConnectionRequest.find({
+      $or: [
+        {
+          fromUserId: loggedInUser._id,
+        },
+        {
+          toUserId: loggedInUser._id,
+        },
+      ],
+    }).select("fromUserId toUserId");
+
+    const hideUsersFromFeed = new Set();
+
+    connectionsRequests.forEach((requests) => {
+      hideUsersFromFeed.add(requests.fromUserId.toString());
+      hideUsersFromFeed.add(requests.toUserId.toString());
+    });
+    console.log(hideUsersFromFeed);
+    res.send(connectionsRequests);
+  } catch (err) {
+    res.status(400).send("Error: " + err.message);
+  }
+});
+
 module.exports = userRouter;
