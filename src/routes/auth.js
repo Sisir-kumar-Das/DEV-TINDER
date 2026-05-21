@@ -46,7 +46,9 @@ router.post("/login", async (req, res) => {
       res.cookie("token", token, {
         expires: new Date(Date.now() + 8 * 3600000),
       });
-      res.send("Login Sucessful!");
+      console.log(user);
+
+      res.send(user);
     } else {
       throw new Error("Email ID or password does not exist!");
     }
