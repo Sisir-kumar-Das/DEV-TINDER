@@ -34,7 +34,6 @@ router.post("/signup", async (req, res) => {
     res.status(500).send("Error: " + err.message);
   }
 });
-//
 
 router.post("/login", async (req, res) => {
   try {
